@@ -1,0 +1,41 @@
+{
+    "wallet": {
+        "address": "<your 0x wallet address>",
+        "pkFileLocation": "<file path to your primary key text file>"
+    },
+
+    "professionMaxAttempts": "5",
+    "nonProfessionMaxAttempts": "3",
+
+    "pollingInterval": "60000",
+    
+    "quests": [
+        {
+            "name": "Fishing",
+            "professionHeroes": [ 12345, 54321, 23541 ],
+            "nonProfessionHeroes": [ 10203 ],
+            "contractAddress": "0xE259e8386d38467f0E7fFEdB69c3c9C935dfaeFc"
+        },
+        {
+            "name": "Foraging",
+            "professionHeroes": [ 20301 ],
+            "nonProfessionHeroes": [ 20303, 12354, 24351 ],
+            "contractAddress": "0x3132c76acF2217646fB8391918D28a16bD8A8Ef4"
+        },
+        {
+            "name": "WishingWell",
+            "professionHeroes": [ ],
+            "nonProfessionHeroes": [ ],
+            "contractAddress": "0x0548214A0760a897aF53656F4b69DbAD688D8f29"
+        }
+    ],
+
+    "questContract": "0x5100Bd31b822371108A0f63DCFb6594b9919Eaf4",
+    "heroContract": "0x5f753dcdf9b1ad9aabc1346614d1f4746fd6ce5c",
+
+    "useBackupRpc": true,
+    "rpc" : {
+        "harmonyRpc": "https://api.harmony.one",
+        "poktRpc": "https://harmony-0-rpc.gateway.pokt.network"
+    }
+}
