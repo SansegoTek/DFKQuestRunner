@@ -1,2 +1,2 @@
 # DFKQuestRunner
-Put your DeFi Kingdoms heroes to work without breaking a sweat.
+Keep your DeFi Kingdoms heroes questing without breaking a sweat.
