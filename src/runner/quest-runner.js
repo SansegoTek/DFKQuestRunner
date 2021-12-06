@@ -32,18 +32,15 @@ async function checkForQuests() {
     }
     catch(err)
     {
-        // TODO: error handling throughout
-        console.log(err)
+        console.error(err)
     }
 }
 
 async function evaluateQuests(activeQuests) {
     var questsToStart = new Array()
+    var questingHeroes = new Array()
 
-    var questingHeroes = activeQuests.reduce((heroes, quest) => 
-        quest.heroes.forEach(h => heroes.push(h)),
-        [ -1]
-    )
+    activeQuests.forEach(q => q.heroes.forEach(h => questingHeroes.push(Number(h))))
 
     for (const quest of config.quests) {
         if (quest.professionHeroes.length > 0
@@ -111,39 +108,29 @@ async function startQuest(quest) {
     try {
         console.log(`Starting ${quest.professional ? "Professional" : "Non-professional" } ${quest.name} quest.`)
 
-        console.log(quest.heroes)
-        console.log(quest.contractAddress)
-        console.log(quest.attempts)
-
-        let transaction = await questContract.connect(wallet).startQuest(quest.heroes, quest.address, quest.attempts)
-        let receipt = await transaction.wait()
-        if (receipt.status !== 1) throw new Error(`StartQuest receipt had a status of ${receipt.status}`)
+        let receipt = await tryTransaction(() => questContract.connect(wallet).startQuest(quest.heroes, quest.address, quest.attempts), 2)
 
         console.log(`Started ${quest.professional ? "Professional" : "Non-professional" } ${quest.name} quest.`)
     }
     catch(err) {
         console.warn(`Error starting quest - this will be retried next polling interval`)
-        console.error(err)
     }
 }
 
 async function completeQuest(heroId) {
     try {
         console.log(`Completing quest led by hero ${heroId}`)
-        let transaction = await questContract.connect(wallet).completeQuest(heroId)
-        let receipt = await transaction.wait()
-        if (receipt.status !== 1) throw new Error(`Receipt had a status of ${receipt.status}`)
 
-        // TODO: Newlines instead \n
-        // TODO: console green for completed quests?
+        let receipt = await tryTransaction(() => questContract.connect(wallet).completeQuest(heroId), 2)
+
         console.log()
-        console.log(`***** Completed quest led by hero ${heroId} *****`)  // TODO: Quest name
+        console.log(`***** Completed quest led by hero ${heroId} *****`) 
 
         let xpEvents = receipt.events.filter(e => e.event === 'QuestXP')
-        console.log(`XP: ${xpEvents.reduce((total, result) => total + result.args.xpEarned, 0)}`)
+        console.log(`XP: ${xpEvents.reduce((total, result) => total + Number(result.args.xpEarned), 0)}`)
 
         let suEvents = receipt.events.filter(e => e.event === 'QuestSkillUp')
-        console.log(`SkillUp: ${suEvents.reduce((total, result) => total + result.args.skillUp, 0) / 10}`)
+        console.log(`SkillUp: ${suEvents.reduce((total, result) => total + Number(result.args.skillUp), 0) / 10}`)
 
         let rwEvents = receipt.events.filter(e => e.event === 'QuestReward')
         rwEvents.forEach((result) => console.log(`${result.args.itemQuantity} x ${getRewardDescription(result.args.rewardItem)}`))
@@ -154,13 +141,25 @@ async function completeQuest(heroId) {
     }
     catch(err) {
         console.warn(`Error completing quest for heroId ${heroId} - this will be retried next polling interval`)
-        console.error(err)
     }
 }
 
+async function tryTransaction(transaction, attempts) {
+    for (let i=0; i < attempts; i++) {
+        try {
+            var tx = await transaction()
+            let receipt = await tx.wait()
+            if (receipt.status !== 1) throw new Error(`Receipt had a status of ${receipt.status}`)
+            return receipt
+        }
+        catch(err) {
+            if (i === attempts-1) throw err
+        }
+    }
+}
 
 function getRewardDescription(rewardAddress) {
-    let desc = rewardLookup['0x6e1bC01Cc52D165B357c42042cF608159A2B81c1']
+    let desc = rewardLookup[rewardAddress]
     return desc ? desc : rewardAddress
 }
 
