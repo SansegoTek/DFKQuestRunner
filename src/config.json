@@ -1,7 +1,7 @@
 {
     "wallet": {
         "address": "",
-        "pkFileLocation": "/Users/akintunde/Documents/DFKQuestRunner/src/<your_text_file_name.txt"
+        "pkFileLocation": "/Users/akintunde/Documents/DFKQuestRunner/src/<your_text_file_name>.txt"
     },
 
     "professionMaxAttempts": "5",
