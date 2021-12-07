@@ -6,7 +6,7 @@ DFKQuestRunner makes the most of your DFK heroes by sending them on quests autom
 Features:
  - Sends your heroes on group quests - your professionals can go together for five quests (25 stamina), your non-professionals can go together for 3 quests (21 stamina)
  - Works with individual heroes too
- - Your group is sent on a quest as soon as the minimum stamina requirements are set
+ - Your group is sent on a quest as soon as the minimum stamina requirements are met
  - Optimizes gas fees by waiting until stamina is highest, to maximize the number of attempts in a turn
  - Also allows you to send your heroes for only 1, 2, 3 or 4 attempts
  - Optimizes time questing by completing quests as soon as the heroes have finished questing
@@ -48,24 +48,41 @@ If you've got this far and are still considering using the app, congratulations 
  - Install [Node and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
  - Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
  - Create a folder for the source code, navigate to the folder in your terminal of choice, and clone the DFKQuestRunner repo into it
- `git clone https://github.com/SansegoTek/DFKQuestRunner.git`
+ ```git clone https://github.com/SansegoTek/DFKQuestRunner.git```
  - Navigate into the repo folder and install the application dependencies
- `npm install`
+ ```npm install```
 
 
 # Configuration
 
 *If you haven't read the private key section above, go back and read it!*
 
+## Save the private key 
+ - [Export your private key](https://metamask.zendesk.com/hc/en-us/articles/360015289632-How-to-Export-an-Account-Private-Key) from MetaMask
+ - Save the private key into a text file. Make sure there are no spaces, newlines or any other whitespace around it
+ - As above - **Be careful with this file. At a minimum, do not save it anywhere easily discoverable, or anywhere within a Git folder.**
 
-PK needs to be stored in a text file
-File should ideally be stored on USB, especially secure USB like IronKeye
-config.json
+## Configuration
 
-Each config section has a "professionHeroes" and a "nonProfessionHeroes" field. You should add your heroes with the relevant profession to "professionHeroes", and any others (e.g. miners or gardeners) that you would still like to use for fishing/foraging to "nonProfessionHeroes"
+Configuration is handled in `config.json`. The key configuration settings to be aware of are:
 
-useBackupRPC is currently set to true as there are ongoing issues with Harmony RPC
+```
+wallet
+ - address - your 0x wallet address used with Defi Kingdoms
+ - pkFileLocation - the file path to your primary key file
 
+professionMaxAttempts - the number of attempts that your professional heroes (e.g. fishers on a fishing quest) should try
+nonProfessionMaxAttempts - the number of attempts that your non-professional heroes (e.g. miners on a foraging quest) should try
+
+pollingInterval - how often, in milliseconds, the app checks for new work to do
+
+quests
+ - <quest>
+   - professionHeroes - Comma-separated list of the Ids of the professional heros that you are sending on this quest. Make sure the heroes profession matches the quests profession
+   - nonProfessionHeroes - Comma-separated list of the Ids of the non-professional heroes that you are sending on this quest. Make sure the heroes profession doesn't match the quests profession
+
+useBackupRpc - false to use the Harmony RPC, true to use the POKT RPC when Harmony RPC has issues
+```
 
 # Running
 Run using node
