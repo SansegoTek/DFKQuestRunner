@@ -1,8 +1,8 @@
-const config = require("./../config.json")
-const ethers = require("ethers")
-const abi = require("./abi.json")
-const rewardLookup = require("./rewards.json")
-const fs = require('fs')
+import ethers from "ethers"
+import abi from "./abi.json"
+import config from "../config.json"
+import rewardLookup from "./rewards.json"
+import fs from 'fs'
 
 const provider = new ethers.providers.JsonRpcProvider(getRpc())
 const wallet = new ethers.Wallet(getPrivateKey(), provider)
@@ -185,4 +185,4 @@ function displayTime(timestamp) {
     return hour + ':' + min + ':' + sec
 }
 
-checkForQuests();
+export default checkForQuests;
