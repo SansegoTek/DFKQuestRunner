@@ -48,8 +48,10 @@ If you've got this far and are still considering using the app, congratulations 
  - Install [Node and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
  - Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
  - Create a folder for the source code, navigate to the folder in your terminal of choice, and clone the DFKQuestRunner repo into it
+
  ```git clone https://github.com/SansegoTek/DFKQuestRunner.git```
  - Navigate into the repo folder and install the application dependencies
+ 
  ```npm install```
 
 
@@ -62,7 +64,7 @@ If you've got this far and are still considering using the app, congratulations 
  - Save the private key into a text file. Make sure there are no spaces, newlines or any other whitespace around it
  - As above - **Be careful with this file. At a minimum, do not save it anywhere easily discoverable, or anywhere within a Git folder.**
 
-## Configuration
+## Edit config.json
 
 Configuration is handled in `config.json`. The key configuration settings to be aware of are:
 
