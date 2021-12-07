@@ -1,7 +1,7 @@
 {
     "wallet": {
-        "address": "<your 0x wallet address>",
-        "pkFileLocation": "<file path to your primary key text file>"
+        "address": "",
+        "pkFileLocation": "/Users/akintunde/Documents/DFKQuestRunner/src/<your_text_file_name.txt"
     },
 
     "professionMaxAttempts": "5",
