@@ -54,6 +54,7 @@ Should be safe to leave running, while aslo doing quests in web app, but NOT TES
 If you're finding this valuable, any tips are gratefully received. They will be put to very good use in producing more useful DFK tools.
 
 Tip jar for Sansego: 0xE9A14204D102abbE82A243DC2082086022595044
+
 Tip jar for Tune: 0xd999D0d791eC54281426DB408f6858C1923476Cc
 
 Thanks, and enjoy!
