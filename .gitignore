@@ -1,5 +1,6 @@
 #config
 config.json
+myconfig.json
 
 # Logs
 logs
