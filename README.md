@@ -51,7 +51,7 @@ If you've got this far and are still considering using the app, congratulations 
 
  ```git clone https://github.com/SansegoTek/DFKQuestRunner.git```
  - Navigate into the repo folder and install the application dependencies
- 
+
  ```npm install```
 
 
@@ -62,7 +62,7 @@ If you've got this far and are still considering using the app, congratulations 
 ## Save the private key 
  - [Export your private key](https://metamask.zendesk.com/hc/en-us/articles/360015289632-How-to-Export-an-Account-Private-Key) from MetaMask
  - Save the private key into a text file. Make sure there are no spaces, newlines or any other whitespace around it
- - As above - **Be careful with this file. At a minimum, do not save it anywhere easily discoverable, or anywhere within a Git folder.**
+ - As above - **be careful with this file. At a minimum, do not save it anywhere easily discoverable, or anywhere within a Git folder.**
 
 ## Edit config.json
 
@@ -87,18 +87,23 @@ useBackupRpc - false to use the Harmony RPC, true to use the POKT RPC when Harmo
 ```
 
 # Running
-Run using node
-Will loop untill stopped with Ctrl-C
-Can redirect output to a file 
+
+Assuming your terminal is still in the DRFQuestRunner folder, run the app using:
+
+```node src/runner/quest-runner```
+
+The app will loop indefinitely, checking for quests to start or complete every interval defined by the `pollingInterval` config entry
 
 
-# Using with DeFiKingdoms App
-May need to hard-refresh DFK in browser before seeing updated staminas/inventory - Ctrl-F5
-Should be safe to leave running, while aslo doing quests in web app, but NOT TESTED!
+# Using with DeFi Kingdoms App
+
+DFKQuestRunner doesn't communicate directly with the DeFi kingdoms app in your browser - so you may need to hard-refresh (Ctrl-F5) the browser before you see updated stamina and inventory items.
+
+If you are planning on running quests manually, it would be best to stop DFKQuestRunner from running first. Running manually and automatically at the same time has not been tested.
 
 
 # Tip Jar
-If you're finding this valuable, any tips are gratefully received. They will be put to very good use in producing more useful DFK tools.
+If you're finding DFKQuestRunner valuable, any tips are gratefully received. They will be put to very good use in producing more useful DFK tools.
 
 Tip jar: 0xE9A14204D102abbE82A243DC2082086022595044
 
