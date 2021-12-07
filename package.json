@@ -1,0 +1,23 @@
+{
+  "name": "dfkquestrunner",
+  "version": "1.0.0",
+  "description": "Keep your DeFi Kingdoms heroes questing without breaking a sweat.",
+  "main": "index.js",
+  "dependencies": {
+    "ethers": "^5.5.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SansegoTek/DFKQuestRunner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SansegoTek/DFKQuestRunner/issues"
+  },
+  "homepage": "https://github.com/SansegoTek/DFKQuestRunner#readme"
+}

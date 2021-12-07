@@ -18,9 +18,9 @@ Features:
 
 
 # Private Keys - Proceed with EXTREME CAUTION!
-I'll be very blunt about this - if you are not extremely careful using this app, you run the risk of losing the entire contents of your wallet. Yes, thats right - every single hero, JEWEL, Egg, Goldvein etc that you've worked so hard to accumulate - all gone. Not only that, but any ONE, ETH, NFTs etc that reside in that wallet - somebody elses property. Scared? Good!
+I'll be very blunt about this - if you are not extremely careful using this app, you run the risk of losing the entire contents of your wallet. Yes, that's right - every single hero, JEWEL, Egg, Goldvein etc that you've worked so hard to accumulate - all gone. Not only that, but any ONE, ETH, NFTs etc that reside in that wallet - somebody else's property. Scared? Good!
 
-You're in DFK and on github, so you probably have a good understanding of why this risk exists. The reasons are spelled out below, but if any of this is news to you, you almost definitely shouldn't be using this app.
+You're in DFK and on GitHub, so you probably have a good understanding of why this risk exists. The reasons are spelled out below, but if any of this is news to you, you almost definitely shouldn't be using this app.
 
 The reason this risk exists is because the app needs access to your private key. Private keys are like the main "password" to your wallet. Every time something significant (a "Transaction") happens in your wallet like sending coin to a different wallet, or sending a hero on a quest, your private key is used to ensure that you have personally signed-off on that transaction. MetaMask manages your private key for you and keeps it safe. When it pops up asking you to confirm a transaction, it's using your private key to sign that transaction.
 
@@ -36,7 +36,7 @@ Some people are comfortable with that risk - maybe their drive is encrypted, the
 
 There is also a risk for source code contributors. If you were to inadvertently push your private key file into GitHub - well, let's just say - [it would be bad](https://www.youtube.com/watch?v=jyaLZHiJJnE). There are bots out in the wild that react to GitHub commits in public repos, and scan for anything resembling a private key. Your wallet would be emptied before you could say "total protonic reversal", and who ya gonna call to dig you out of that mess? Keep your private key file well away from the git folder structure.
 
-Finally - if you've done your homework, found a level of risk you are comfortable with, and are happily using this app, don't be tempted to try out any similar-looking projects without first thoroughly investigating their code base. Sometimes people will fork GitHub projects, make some changes (e.g. like sending your private key to a web server that they control), and try and pass it off as the original by, say, casusally dropping a link to it in a discord somewhere.
+Finally - if you've done your homework, found a level of risk you are comfortable with, and are happily using this app, don't be tempted to try out any similar-looking projects without first thoroughly investigating their code base. Sometimes people will fork GitHub projects, make some changes (e.g. like sending your private key to a web server that they control), and try and pass it off as the original by, say, casually dropping a link to it in a discord somewhere.
 
 *Listen - ultimately, you're running some random code off of the internet, written by some people you probably don't know, who are asking you for access to your private key. WTF???!!??! I can tell you that we're good guys, and won't scam you, and that's absolutely true - but I'd prefer it if you didn't believe me. Do your homework, read the code, be aware of the risks, and only go ahead if you're comfortable. Otherwise, stay away. You're on your own. No responsibility for losses can or will be accepted from anyone involved in the project*
 
@@ -44,13 +44,20 @@ If you've got this far and are still considering using the app, congratulations 
 
 
 # Installation
-Mac/windows/linux sections
-Install node etc
-Download code
-npm install
+
+ - Install [Node and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+ - Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+ - Create a folder for the source code, navigate to the folder in your terminal of choice, and clone the DFKQuestRunner repo into it
+ `git clone https://github.com/SansegoTek/DFKQuestRunner.git`
+ - Navigate into the repo folder and install the application dependencies
+ `npm install`
 
 
 # Configuration
+
+*If you haven't read the private key section above, go back and read it!*
+
+
 PK needs to be stored in a text file
 File should ideally be stored on USB, especially secure USB like IronKeye
 config.json
