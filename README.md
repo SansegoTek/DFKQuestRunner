@@ -29,7 +29,7 @@ useBackupRPC is currently set to true as there are ongoing issues with Harmony R
 
 # Running
 Run using node
-    - `node index.js`
+    - `node --experimental-json-modules index.js`
 
 Will loop untill stopped with Ctrl-C
 Can redirect output to a file 
