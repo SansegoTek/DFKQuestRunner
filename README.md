@@ -45,7 +45,7 @@ If you've got this far and are still considering using the app, congratulations 
 
 # Installation
 
-If you're wanting to get your hands dirty with the source code and maybe contribute something back, follow the instructions for Developers below. If you just want to run the application, follow the instructions for Non-developers. It's still a bit technical at this stage, but the included links for Mac and Wndows should get you there (if you are a *nix user I'm assuming you don't need links).
+If you're wanting to get your hands dirty with the source code and maybe contribute something back, follow the instructions for Developers below. If you just want to run the application, follow the instructions for Non-developers. It's still a bit technical at this stage, but the included links for Mac and Windows should get you there (if you are a *nix user I'm assuming you won't need links).
 
 ## Developers
 
