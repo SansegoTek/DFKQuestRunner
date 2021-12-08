@@ -26,15 +26,15 @@ The reason this risk exists is because the app needs access to your private key.
 
 The whole purpose of DFKQuestRunner is to run unattended. If you have to click a button every time a quest needs to start or complete, it defeats the purpose. So to manage this, it needs access to the private key so it can sign those transactions automatically. There is currently no way around this (although we're looking into options).
 
-DFKQuestRunner ONLY uses your private key to sign transactions. It loads the private key from a file (more on that in a second) and uses it to configure the popular open-source "ethers.js" library, which is used to sign and run the transactions. You can verify this in the code yourself - in fact, I would wholeheartedly recommend that you do exactly that (and tell us fast if you find any issues!)
+DFKQuestRunner ONLY uses your private key to sign transactions. The first time you run it, it will prompt you for your private key and a password, and it will save the private key in an encrypted form, to a file called 'w.json'. Only somebody who knows the password will be able to decrypt it. The private key is then used it to configure the popular open-source "ethers.js" library, which is used to sign and run the transactions. The app itself will not save the private key in it's unencrypted form. You can verify this in the code yourself - in fact, I would wholeheartedly recommend that you do exactly that (and tell us fast if you find any issues!)
 
 *Please be aware that what follows is not advice as to what you should do in your specific situation - if you want to use this app, you need to educate yourself on the risks, and find a level of risk that you're comfortable with.*
 
-So, what are the risks? The main risk is that your private key will need to reside in a text file somewhere. If this is on your machine, it runs the risk of being discovered, either by another human or some malware. Even if you create the file, use the runner, and then delete the file, somebody could potentially use drive recovery tools to restore that deleted file and access your private key. Paranoid? Maybe. But this is real money we're talking about.
+So, what are the risks? The main risk is that your encrypted private key will reside in a text file somewhere. It runs the risk of being discovered, either by another human or some malware. There's a chance they could know or guess your password and be able to access it. Even if you create the file, use the runner, and then delete the file, somebody could potentially use drive recovery tools to restore that deleted file and access your private key. Paranoid? Maybe. But this is real money we're talking about.
 
-Some people are comfortable with that risk - maybe their drive is encrypted, they have strong passwords, 2FA, they lock their laptop in a safe when they are not using it. Other people would prefer that the private key file never touches their hard drive, and so create it on a secure USB drive which it never leaves. There are no doubt plenty of other methods. Again, education is key. 
+Some people are comfortable with that risk - their password is strong, maybe their drive is encrypted, they use 2FA on their OS, they lock their laptop in a safe when they are not using it. Other people would prefer that the private key file never touches their hard drive, and so create it on a secure USB drive which it never leaves (you can configure this - see the configuration section below). There are no doubt plenty of other methods. Again, education is key. 
 
-There is also a risk for source code contributors. If you were to inadvertently push your private key file into GitHub - well, let's just say - [it would be bad](https://www.youtube.com/watch?v=jyaLZHiJJnE). There are bots out in the wild that react to GitHub commits in public repos, and scan for anything resembling a private key. Your wallet would be emptied before you could say "total protonic reversal", and who ya gonna call to dig you out of that mess? Keep your private key file well away from the git folder structure.
+There is also a risk for source code contributors. If you were to inadvertently push your *unencrypted* private key file into GitHub - well, let's just say - [it would be bad](https://www.youtube.com/watch?v=jyaLZHiJJnE). There are bots out in the wild that react to GitHub commits in public repos, and scan for anything resembling a private key. Your wallet would be emptied before you could say "total protonic reversal", and who ya gonna call to dig you out of that mess? Don't be tempted to copy/paste your private key and save it unencrypted anywhere near the git folder structure.
 
 Finally - if you've done your homework, found a level of risk you are comfortable with, and are happily using this app, don't be tempted to try out any similar-looking projects without first thoroughly investigating their code base. Sometimes people will fork GitHub projects, make some changes (e.g. like sending your private key to a web server that they control), and try and pass it off as the original by, say, casually dropping a link to it in a discord somewhere.
 
@@ -45,6 +45,10 @@ If you've got this far and are still considering using the app, congratulations 
 
 # Installation
 
+If you're wanting to get your hands dirty with the source code and maybe contribute something back, follow the instructions for Developers below. If you just want to run the application, follow the instructions for Non-developers. It's still a bit technical at this stage, but the included links for Mac and Wndows should get you there (if you are a *nix user I'm assuming you don't need links).
+
+## Developers
+
  - Install [Node and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
  - Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
  - Create a folder for the source code, navigate to the folder in your terminal of choice, and clone the DFKQuestRunner repo into it
@@ -54,24 +58,26 @@ If you've got this far and are still considering using the app, congratulations 
 
  ```npm install```
 
+## Non-developers
+
+ - Install [Node and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+ - Click the green "Code" button at the top of this page, and select "download zip". This will download a file called "DFKQuestRunner-main.zip"
+ - Unzip the zip file to a location you're happy with. [Mac](https://www.businessinsider.com/how-to-unzip-files-on-mac?r=US&IR=T) | [Windows](https://support.microsoft.com/en-us/windows/zip-and-unzip-files-f6dde0a7-0fec-8294-e1d3-703ed85e7ebc)
+ - Open up a terminal window. [Mac](https://www.businessinsider.com/how-to-open-terminal-on-mac?r=US&IR=T) | [Windows](https://www.businessinsider.com/how-to-open-command-prompt)
+ - In the terminal window, navigate to the location you unzipped the file to. Your terminal should be in the "DFKQuestRunner-main" folder. [Mac](https://www.macworld.com/article/221277/command-line-navigating-files-folders-mac-terminal.html) | [Windows](https://www.howtogeek.com/659411/how-to-change-directories-in-command-prompt-on-windows-10/)
+ - In the terminal window, run the command to install the application dependencies
+
+```npm install```
+
 
 # Configuration
-
-*If you haven't read the private key section above, go back and read it!*
-
-## Save the private key 
- - [Export your private key](https://metamask.zendesk.com/hc/en-us/articles/360015289632-How-to-Export-an-Account-Private-Key) from MetaMask
- - Save the private key into a text file. Make sure there are no spaces, newlines or any other whitespace around it
- - As above - **be careful with this file. At a minimum, do not save it anywhere easily discoverable, or anywhere within a Git folder.**
-
-## Edit config.json
 
 Configuration is handled in `config.json`. The key configuration settings to be aware of are:
 
 ```
 wallet
  - address - your 0x wallet address used with Defi Kingdoms
- - pkFileLocation - the file path to your primary key file
+ - pkFileLocation - the file path to your encrypted primary key file. This defaults to a file called "w.json" in the root of the source code, but can be changed to e.g. point to a location on a secure USB drive
 
 professionMaxAttempts - the number of attempts that your professional heroes (e.g. fishers on a fishing quest) should try
 nonProfessionMaxAttempts - the number of attempts that your non-professional heroes (e.g. miners on a foraging quest) should try
@@ -88,9 +94,15 @@ useBackupRpc - false to use the Harmony RPC, true to use the POKT RPC when Harmo
 
 # Running
 
-Assuming your terminal is still in the DRFQuestRunner folder, run the app using:
+*If you haven't read the private key section above, go back and read it!*
+
+The first time you run the application, it will prompt you for a password, and a private key. Your private key will be encrypted with the password you provide, so for subsequent runs you will need to enter the same password. Follow the instructions here to [Export your private key](https://metamask.zendesk.com/hc/en-us/articles/360015289632-How-to-Export-an-Account-Private-Key) from MetaMask.
+
+Assuming your terminal is still in the DFKQuestRunner folder, run the app using:
 
 ```node src/runner/quest-runner```
+
+Enter your password, and if you are running it for the first time, export your private key from MetaMask, and paste it when prompted.
 
 The app will loop indefinitely, checking for quests to start or complete every interval defined by the `pollingInterval` config entry
 

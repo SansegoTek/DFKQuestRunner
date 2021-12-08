@@ -1,18 +1,83 @@
-const config = require("./../config.json")
-const ethers = require("ethers")
-const abi = require("./abi.json")
-const rewardLookup = require("./rewards.json")
+const config = require('./../config.json')
+const ethers = require('ethers')
+const abi = require('./abi.json')
+const rewardLookup = require('./rewards.json')
 const fs = require('fs')
 
 const provider = new ethers.providers.JsonRpcProvider(getRpc())
-const wallet = new ethers.Wallet(getPrivateKey(), provider)
 const heroContract = new ethers.Contract(config.heroContract, abi, provider)
 const questContract = new ethers.Contract(config.questContract, abi, provider)
 const userHeroes = heroContract.getUserHeroes(config.wallet.address)
 
+const walletPath = './w.json'
+let wallet
+
+async function main() {
+    try {
+        wallet = fs.existsSync(walletPath)
+            ? await getEncryptedWallet()
+            : await createWallet()
+
+        console.clear()
+        wallet.connect(provider)
+        checkForQuests()
+    }
+    catch(err) {
+        console.clear()
+        console.error(`Unable to run: ${err.message}`)
+    }
+}
+
+async function getEncryptedWallet() {
+    console.log('\nHi. You need to enter the password you chose previously.')
+    let pw = await promptForInput('Enter your password: ', 'password')
+
+    try {
+        let encryptedWallet = fs.readFileSync(walletPath, 'utf8')
+        let decryptedWallet = ethers.Wallet.fromEncryptedJsonSync(encryptedWallet, pw)
+        return decryptedWallet.connect(provider)
+    }
+    catch(err) {
+        throw new Error('Unable to read your encrypted wallet. Try again, making sure you provide the correct password. If you have forgotten your password, delete the file "w.json" and run the application again.')
+    }
+}
+
+async function createWallet() {
+    console.log('\nHi. You have not yet encrypted your private key.')
+    let pw = await promptForInput('Choose a password for encrypting your private key, and enter it here: ', 'password')
+    let pk = await promptForInput('Now enter your private key: ', 'private key')
+
+    try {
+        let wallet = new ethers.Wallet(pk, provider)
+        let enc = await wallet.encrypt(pw)
+        fs.writeFileSync(walletPath, enc)
+        return wallet
+    }
+    catch(err) {
+        throw new Error('Unable to create your wallet. Try again, making sure you provide a valid private key.')
+    }
+}
+
+async function promptForInput(prompt, promptFor) {
+    const readline = require('readline').createInterface({ input: process.stdin, output: process.stdout });
+
+    try {
+        let input = await new Promise(resolve => {
+            readline.question(prompt, answer => resolve(answer))
+        })
+        if (!input) throw new Error(`No ${promptFor} provided. Try running the application again, and provide a ${promptFor}.`)
+        return input
+    }
+    finally {
+        readline.close()
+    }
+}
+
+
 async function checkForQuests() {
     try
     {
+        console.log('\nChecking for quests...\n')
         let activeQuests = await questContract.getActiveQuests(config.wallet.address)
         let doneQuests = activeQuests.filter(quest => quest.completeAtTime < Math.round(Date.now() / 1000))
         let runningQuests = activeQuests.filter(quest => !doneQuests.includes(quest))
@@ -123,8 +188,7 @@ async function completeQuest(heroId) {
 
         let receipt = await tryTransaction(() => questContract.connect(wallet).completeQuest(heroId), 2)
 
-        console.log()
-        console.log(`***** Completed quest led by hero ${heroId} *****`) 
+        console.log(`\n***** Completed quest led by hero ${heroId} *****\n`)
 
         let xpEvents = receipt.events.filter(e => e.event === 'QuestXP')
         console.log(`XP: ${xpEvents.reduce((total, result) => total + Number(result.args.xpEarned), 0)}`)
@@ -135,9 +199,7 @@ async function completeQuest(heroId) {
         let rwEvents = receipt.events.filter(e => e.event === 'QuestReward')
         rwEvents.forEach((result) => console.log(`${result.args.itemQuantity} x ${getRewardDescription(result.args.rewardItem)}`))
 
-        console.log()
-        console.log('*****')
-        console.log()
+        console.log('\n*****\n')
     }
     catch(err) {
         console.warn(`Error completing quest for heroId ${heroId} - this will be retried next polling interval`)
@@ -163,16 +225,6 @@ function getRewardDescription(rewardAddress) {
     return desc ? desc : rewardAddress
 }
 
-function getPrivateKey() {
-    try {
-        return fs.readFileSync(config.wallet.pkFileLocation, 'utf8')
-    }
-    catch(err) {
-        console.error(err)
-        process.exit()
-    }
-}
-
 function getRpc() {
     return config.useBackupRpc ? config.rpc.poktRpc : config.rpc.harmonyRpc;
 }
@@ -185,4 +237,8 @@ function displayTime(timestamp) {
     return hour + ':' + min + ':' + sec
 }
 
-checkForQuests();
+
+main()
+
+// TODO: Recover if failure (network down?)
+// Merge some of farmertunes changes
