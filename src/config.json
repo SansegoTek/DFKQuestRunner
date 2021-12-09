@@ -1,7 +1,7 @@
 {
     "wallet": {
-        "address": "0x6d45b3F5eeb4715823928AF136B7b90f2461592a",
-        "pkFileLocation": "e:\\w.json"
+        "address": "<your 0x Wallet Address>",
+        "encryptedWalletPath": "./w.json"
     },
 
     "professionMaxAttempts": "5",
@@ -12,14 +12,14 @@
     "quests": [
         {
             "name": "Fishing",
-            "professionHeroes": [ 24170 ],
-            "nonProfessionHeroes": [ 44341, 44757, 36323, 38662, 51338 ],
+            "professionHeroes": [ 34567 ],
+            "nonProfessionHeroes": [ 12345, 23456 ],
             "contractAddress": "0xE259e8386d38467f0E7fFEdB69c3c9C935dfaeFc"
         },
         {
             "name": "Foraging",
-            "professionHeroes": [ 38442, 30532, 39249, 40885, 30179, 51335 ],
-            "nonProfessionHeroes": [ 32898, 47601, 53449 ],
+            "professionHeroes": [ 45678, 56789 ],
+            "nonProfessionHeroes": [ 67890 ],
             "contractAddress": "0x3132c76acF2217646fB8391918D28a16bD8A8Ef4"
         },
         {

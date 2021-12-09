@@ -9,12 +9,11 @@ const heroContract = new ethers.Contract(config.heroContract, abi, provider)
 const questContract = new ethers.Contract(config.questContract, abi, provider)
 const userHeroes = heroContract.getUserHeroes(config.wallet.address)
 
-const walletPath = './w.json'
 let wallet
 
 async function main() {
     try {
-        wallet = fs.existsSync(walletPath)
+        wallet = fs.existsSync(config.wallet.encryptedWalletPath)
             ? await getEncryptedWallet()
             : await createWallet()
 
@@ -33,7 +32,7 @@ async function getEncryptedWallet() {
     let pw = await promptForInput('Enter your password: ', 'password')
 
     try {
-        let encryptedWallet = fs.readFileSync(walletPath, 'utf8')
+        let encryptedWallet = fs.readFileSync(config.wallet.encryptedWalletPath, 'utf8')
         let decryptedWallet = ethers.Wallet.fromEncryptedJsonSync(encryptedWallet, pw)
         return decryptedWallet.connect(provider)
     }
@@ -50,7 +49,7 @@ async function createWallet() {
     try {
         let wallet = new ethers.Wallet(pk, provider)
         let enc = await wallet.encrypt(pw)
-        fs.writeFileSync(walletPath, enc)
+        fs.writeFileSync(config.wallet.encryptedWalletPath, enc)
         return wallet
     }
     catch(err) {

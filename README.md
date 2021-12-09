@@ -34,6 +34,8 @@ So, what are the risks? The main risk is that your encrypted private key will re
 
 Some people are comfortable with that risk - their password is strong, maybe their drive is encrypted, they use 2FA on their OS, they lock their laptop in a safe when they are not using it. Other people would prefer that the private key file never touches their hard drive, and so create it on a secure USB drive which it never leaves (you can configure this - see the configuration section below). There are no doubt plenty of other methods. Again, education is key. 
 
+When you export your private key from MetaMask, you might be tempted to copy/paste it into the application. Are you absolutely sure you don't have a silent virus on your machine that reads the contents of your clipboard? Or there's the possibility of leaving it lying around in your clipboard, and then accidentally pasting it into a discord. Typing it in to the application, rather than copy/pasting, would be safer. Yes, it takes longer and is error prone, but you only have to do it once.
+
 There is also a risk for source code contributors. If you were to inadvertently push your *unencrypted* private key file into GitHub - well, let's just say - [it would be bad](https://www.youtube.com/watch?v=jyaLZHiJJnE). There are bots out in the wild that react to GitHub commits in public repos, and scan for anything resembling a private key. Your wallet would be emptied before you could say "total protonic reversal", and who ya gonna call to dig you out of that mess? Don't be tempted to copy/paste your private key and save it unencrypted anywhere near the git folder structure.
 
 Finally - if you've done your homework, found a level of risk you are comfortable with, and are happily using this app, don't be tempted to try out any similar-looking projects without first thoroughly investigating their code base. Sometimes people will fork GitHub projects, make some changes (e.g. like sending your private key to a web server that they control), and try and pass it off as the original by, say, casually dropping a link to it in a discord somewhere.
@@ -77,7 +79,7 @@ Configuration is handled in `config.json`. The key configuration settings to be 
 ```
 wallet
  - address - your 0x wallet address used with Defi Kingdoms
- - pkFileLocation - the file path to your encrypted primary key file. This defaults to a file called "w.json" in the root of the source code, but can be changed to e.g. point to a location on a secure USB drive
+ - encryptedWalletPath - the file path to your encrypted primary key file. This defaults to a file called "w.json" in the root of the source code, but can be changed to e.g. point to a location on a secure USB drive
 
 professionMaxAttempts - the number of attempts that your professional heroes (e.g. fishers on a fishing quest) should try
 nonProfessionMaxAttempts - the number of attempts that your non-professional heroes (e.g. miners on a foraging quest) should try
