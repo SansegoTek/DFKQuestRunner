@@ -151,16 +151,23 @@ async function evaluateQuests(activeQuests) {
 async function evaluateQuestHeroesStamina(quest, maxAttempts, professional) {
     let minStamina = professional ? 5 * maxAttempts : 7 * maxAttempts
     let heroes = professional ? quest.professionHeroes : quest.nonProfessionHeroes
-    let lowestStamina = 100
-    let lowestStaminaHero;
+    let highestStamina = 100
 
-    for (const h of heroes) {
-        var stamina = Number(await questContract.getCurrentStamina(h))
-        if (stamina < lowestStamina) {
-            lowestStaminaHero = h
-            lowestStamina = stamina
+    const promises = heroes.map((hero) => {
+        return questContract.getCurrentStamina(hero);
+
+    });
+
+    const results = await Promise.all(promises);
+
+    const lowestStamina = results.reduce((lowest, value, index) => {
+        const stamina = Number(value);
+        if (stamina < lowest) {
+            return stamina;
         }
-    };
+
+        return lowest;
+    }, highestStamina);
 
     if (lowestStamina < 100 && lowestStamina >= minStamina) return true;
 
