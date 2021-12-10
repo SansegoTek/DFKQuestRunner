@@ -1,7 +1,6 @@
 const fs = require('fs')
 
 const ethers = require('ethers')
-require('dotenv').config();
 
 const config = require('./../config.json')
 const abi = require('./abi.json')
