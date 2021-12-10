@@ -1,6 +1,7 @@
 const fs = require('fs')
 
 const ethers = require('ethers')
+const readline = require('readline');
 
 const config = require('./../config.json')
 const abi = require('./abi.json')
@@ -60,17 +61,17 @@ async function createWallet() {
 }
 
 async function promptForInput(prompt, promptFor) {
-    const readline = require('readline').createInterface({ input: process.stdin, output: process.stdout });
+    const read = readline.createInterface({ input: process.stdin, output: process.stdout });
 
     try {
         let input = await new Promise(resolve => {
-            readline.question(prompt, answer => resolve(answer))
+            read.question(prompt, answer => resolve(answer))
         })
         if (!input) throw new Error(`No ${promptFor} provided. Try running the application again, and provide a ${promptFor}.`)
         return input
     }
     finally {
-        readline.close()
+        read.close()
     }
 }
 
