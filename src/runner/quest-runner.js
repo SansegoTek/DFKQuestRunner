@@ -115,69 +115,63 @@ async function evaluateQuests(activeQuests) {
         if (quest.professionHeroes.length > 0
             && !questingHeroes.includes(quest.professionHeroes[0]))
             {
-                var staminaGood = await evaluateQuestHeroesStamina(quest, config.professionMaxAttempts, true)
-                if (staminaGood)
-                {
-                    questsToStart.push( {
-                        name: quest.name,
-                        address: quest.contractAddress,
-                        professional: true,
-                        heroes: quest.professionHeroes,
-                        attempts: config.professionMaxAttempts
-                    })
-                }
+                var readyHeroes = await getHeroesWithGoodStamina(quest, config.professionMaxAttempts, true)
+                questsToStart.push( {
+                    name: quest.name,
+                    address: quest.contractAddress,
+                    professional: true,
+                    heroes: readyHeroes,
+                    attempts: config.professionMaxAttempts
+                })
             }
 
         if (quest.nonProfessionHeroes.length > 0
             && !questingHeroes.includes(quest.nonProfessionHeroes[0]))
             {
-                var staminaGood = await evaluateQuestHeroesStamina(quest, config.nonProfessionMaxAttempts, false)
-                if (staminaGood)
-                {
-                    questsToStart.push( {
-                        name: quest.name,
-                        address: quest.contractAddress,
-                        professional: false,
-                        heroes: quest.nonProfessionHeroes,
-                        attempts: config.nonProfessionMaxAttempts
-                    })
-                }
+                var readyHeroes = await getHeroesWithGoodStamina(quest, config.nonProfessionMaxAttempts, false)
+                questsToStart.push( {
+                    name: quest.name,
+                    address: quest.contractAddress,
+                    professional: false,
+                    heroes: readyHeroes,
+                    attempts: config.nonProfessionMaxAttempts
+                })
             }
     }
 
     return questsToStart
 }
 
-async function evaluateQuestHeroesStamina(quest, maxAttempts, professional) {
+async function getHeroesWithGoodStamina(quest, maxAttempts, professional) {
     let minStamina = professional ? 5 * maxAttempts : 7 * maxAttempts
     let heroes = professional ? quest.professionHeroes : quest.nonProfessionHeroes
-    let highestStamina = 100
 
     const promises = heroes.map((hero) => {
         return questContract.getCurrentStamina(hero);
-
     });
 
     const results = await Promise.all(promises);
 
-    const lowestStamina = results.reduce((lowest, value, index) => {
+    const heroesWithGoodStaminaRaw = results.map((value, index) => {
         const stamina = Number(value);
-        if (stamina < lowest) {
-            return stamina;
+        if (stamina >= minStamina) {
+            return heroes[index];
         }
 
-        return lowest;
-    }, highestStamina);
+        return null;
+    });
 
-    if (lowestStamina < 100 && lowestStamina >= minStamina) return true;
+    const heroesWithGoodStamina = heroesWithGoodStaminaRaw.filter((h) =>  !!h);
 
     // TODO: Contract error, fix
     //let hero = await questContract.getHero(lowestStaminaHero)
     //console.log(`${professional ? "Professional" : "Non-professional" } ${quest.name} quest due to start at ${displayTime(hero.state.staminaFullAt)}`)
 
-    console.log(`${professional ? "Professional" : "Non-professional" } ${quest.name} quest is not ready to start. Lowest stamina is ${lowestStamina}`)
+    if (!heroesWithGoodStamina.length) {
+        console.log(`${professional ? "Professional" : "Non-professional" } ${quest.name} quest is not ready to start.`);
+    }
 
-    return false;
+    return heroesWithGoodStamina;
 }
 
 async function startQuest(quest) {
