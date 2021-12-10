@@ -11,6 +11,9 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[package.json]
+end_of_line = lf
+
 # Matches multiple files with brace expansion notation
 # Set default charset
 [*.{js,py}]
