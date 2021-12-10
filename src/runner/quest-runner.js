@@ -1,8 +1,11 @@
-const config = require('./../config.json')
+const fs = require('fs')
+
 const ethers = require('ethers')
+require('dotenv').config();
+
+const config = require('./../config.json')
 const abi = require('./abi.json')
 const rewardLookup = require('./rewards.json')
-const fs = require('fs')
 
 const provider = new ethers.providers.JsonRpcProvider(getRpc())
 const heroContract = new ethers.Contract(config.heroContract, abi, provider)
@@ -88,7 +91,7 @@ async function checkForQuests() {
 
         // Complete any quests that need to be completed
         for(const quest of doneQuests) { await completeQuest(quest.heroes[0]) }
-        
+
         // Start any quests needing to start
         for(const quest of questsToStart) { await startQuest(quest) }
 
