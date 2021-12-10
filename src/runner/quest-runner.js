@@ -1,7 +1,7 @@
 const fs = require('fs')
+const readline = require('readline');
 
 const ethers = require('ethers')
-const readline = require('readline');
 
 const config = require('./../config.json')
 const abi = require('./abi.json')
@@ -99,7 +99,9 @@ async function checkForQuests() {
     }
     catch(err)
     {
-        console.error(err)
+        console.error(`An error occured. Will attempt to retry in ` +
+          `${config.pollingInterval/1000} seconds... Error:`, err);
+        setTimeout(() => checkForQuests(), config.pollingInterval);
     }
 }
 
