@@ -6,7 +6,7 @@ root = true
 # Windows newlines with a newline ending every file
 [*]
 end_of_line = crlf
-indent_size = 2
+indent_size = 4
 indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
@@ -22,7 +22,7 @@ charset = utf-8
 # Indentation override for all JS under lib directory
 [lib/**.js]
 indent_style = space
-indent_size = 2
+indent_size = 4
 
 # Matches the exact files either package.json or .travis.yml
 [{package.json,.travis.yml}]
