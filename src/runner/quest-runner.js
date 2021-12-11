@@ -1,5 +1,5 @@
 const fs = require('fs')
-const readline = require('readline');
+const readline = require('readline')
 
 const ethers = require('ethers')
 
@@ -7,13 +7,13 @@ const config = require('./../config.json')
 const abi = require('./abi.json')
 const rewardLookup = require('./rewards.json')
 
-const provider = new ethers.providers.JsonRpcProvider(getRpc())
-const questContract = new ethers.Contract(config.questContract, abi, provider)
-
-let wallet
+let provider, questContract, wallet
 
 async function main() {
     try {
+        provider = new ethers.providers.JsonRpcProvider(getRpc())
+        questContract = new ethers.Contract(config.questContract, abi, provider)
+
         wallet = fs.existsSync(config.wallet.encryptedWalletPath)
             ? await getEncryptedWallet()
             : await createWallet()
@@ -93,6 +93,8 @@ async function checkForQuests() {
         for(const quest of questsToStart) { await startQuest(quest) }
 
         setTimeout(() => checkForQuests(), config.pollingInterval);
+
+        console.log(`Waiting for ${config.pollingInterval/1000} seconds...`);
     }
     catch(err)
     {
@@ -173,10 +175,25 @@ async function getHeroesWithGoodStamina(quest, maxAttempts, professional) {
 
 async function startQuest(quest) {
     try {
-        console.log(`Starting ${quest.professional ? "Professional" : "Non-professional" } ${quest.name} quest.`)
+        let batch = 0
+        while (true) {
+            var groupStart = batch * config.maxQuestGroupSize
+            let questingGroup = quest.heroes.slice(groupStart, groupStart + config.maxQuestGroupSize);
+            if (questingGroup.length === 0) break;
 
-        let receipt = await tryTransaction(() => questContract.connect(wallet).startQuest(quest.heroes, quest.address, quest.attempts), 2)
+            await startQuestBatch(quest, questingGroup)
+            batch++
+        }
+    }
+    catch(err) {
+        console.warn(`Error determining questing group - this will be retried next polling interval`)
+    }
+}
 
+async function startQuestBatch(quest, questingGroup) {
+    try {
+        console.log(`Starting ${quest.professional ? "Professional" : "Non-professional" } ${quest.name} quest with heroes ${questingGroup}.`)
+        await tryTransaction(() => questContract.connect(wallet).startQuest(questingGroup, quest.address, quest.attempts), 2)
         console.log(`Started ${quest.professional ? "Professional" : "Non-professional" } ${quest.name} quest.`)
     }
     catch(err) {
@@ -241,6 +258,3 @@ function displayTime(timestamp) {
 
 
 main()
-
-// TODO: Recover if failure (network down?)
-// Merge some of farmertunes changes

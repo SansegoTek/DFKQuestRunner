@@ -4,8 +4,9 @@
         "encryptedWalletPath": "./w.json"
     },
 
-    "professionMaxAttempts": "5",
-    "nonProfessionMaxAttempts": "3",
+    "professionMaxAttempts": 5,
+    "nonProfessionMaxAttempts": 3,
+    "maxQuestGroupSize": 6,
 
     "pollingInterval": "60000",
 
