@@ -18,7 +18,6 @@ async function main() {
             : await createWallet()
 
         console.clear()
-        wallet.connect(provider)
         checkForQuests()
     }
     catch(err) {
@@ -47,10 +46,10 @@ async function createWallet() {
     let pk = await promptForInput('Now enter your private key: ', 'private key')
 
     try {
-        let wallet = new ethers.Wallet(pk, provider)
-        let enc = await wallet.encrypt(pw)
+        let newWallet = new ethers.Wallet(pk, provider)
+        let enc = await newWallet.encrypt(pw)
         fs.writeFileSync(config.wallet.encryptedWalletPath, enc)
-        return wallet
+        return newWallet
     }
     catch(err) {
         throw new Error('Unable to create your wallet. Try again, making sure you provide a valid private key.')
