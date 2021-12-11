@@ -8,7 +8,7 @@
     "nonProfessionMaxAttempts": "3",
 
     "pollingInterval": "60000",
-    
+
     "quests": [
         {
             "name": "Fishing",

@@ -8,9 +8,7 @@ const abi = require('./abi.json')
 const rewardLookup = require('./rewards.json')
 
 const provider = new ethers.providers.JsonRpcProvider(getRpc())
-const heroContract = new ethers.Contract(config.heroContract, abi, provider)
 const questContract = new ethers.Contract(config.questContract, abi, provider)
-const userHeroes = heroContract.getUserHeroes(config.wallet.address)
 
 let wallet
 
