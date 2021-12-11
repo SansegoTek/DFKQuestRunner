@@ -7,6 +7,8 @@ const config = require('./../config.json')
 const abi = require('./abi.json')
 const rewardLookup = require('./rewards.json')
 
+const callOptions = { gasPrice: config.gasPrice, gasLimit: config.gasLimit };
+
 let provider, questContract, wallet
 
 async function main() {
@@ -193,7 +195,7 @@ async function startQuest(quest) {
 async function startQuestBatch(quest, questingGroup) {
     try {
         console.log(`Starting ${quest.professional ? "Professional" : "Non-professional" } ${quest.name} quest with heroes ${questingGroup}.`)
-        await tryTransaction(() => questContract.connect(wallet).startQuest(questingGroup, quest.address, quest.attempts), 2)
+        await tryTransaction(() => questContract.connect(wallet).startQuest(questingGroup, quest.address, quest.attempts, callOptions), 2)
         console.log(`Started ${quest.professional ? "Professional" : "Non-professional" } ${quest.name} quest.`)
     }
     catch(err) {
@@ -205,7 +207,7 @@ async function completeQuest(heroId) {
     try {
         console.log(`Completing quest led by hero ${heroId}`)
 
-        let receipt = await tryTransaction(() => questContract.connect(wallet).completeQuest(heroId), 2)
+        let receipt = await tryTransaction(() => questContract.connect(wallet).completeQuest(heroId, callOptions), 2)
 
         console.log(`\n***** Completed quest led by hero ${heroId} *****\n`)
 

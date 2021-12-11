@@ -38,5 +38,8 @@
     "rpc" : {
         "harmonyRpc": "https://api.harmony.one",
         "poktRpc": "https://harmony-0-rpc.gateway.pokt.network"
-    }
+    },
+
+    "gasPrice": 10000000000,
+    "gasLimit" : 5000000
 }
