@@ -26,7 +26,7 @@ The reason this risk exists is because the app needs access to your private key.
 
 The whole purpose of DFKQuestRunner is to run unattended. If you have to click a button every time a quest needs to start or complete, it defeats the purpose. So to manage this, it needs access to the private key so it can sign those transactions automatically. There is currently no way around this (although we're looking into options).
 
-DFKQuestRunner ONLY uses your private key to sign transactions. The first time you run it, it will prompt you for your private key and a password, and it will save the private key in an encrypted form, to a file called 'w.json' (by default, but you can change this). Only somebody who knows the password will be able to decrypt it. The private key is then used it to configure the popular open-source "ethers.js" library, which is used to sign and run the transactions. The app itself will not save the private key in it's unencrypted form. You can verify this in the code yourself - in fact, I would wholeheartedly recommend that you do exactly that (and tell us fast if you find any issues!)
+DFKQuestRunner ONLY uses your private key to sign transactions. The first time you run it, it will prompt you for your private key and a password, and it will save the private key in an encrypted form, to a file called 'w.json' (by default, but you can change this). Only somebody who knows the password will be able to decrypt it. The private key is then used to configure the popular open-source "ethers.js" library, which is used to sign and run the transactions. The app itself will not save the private key in it's unencrypted form. You can verify this in the code yourself - in fact, I would wholeheartedly recommend that you do exactly that (and tell us fast if you find any issues!)
 
 *Please be aware that what follows is not advice as to what you should do in your specific situation - if you want to use this app, you need to educate yourself on the risks, and find a level of risk that you're comfortable with.*
 
@@ -34,7 +34,7 @@ So, what are the risks? The main risk is that your encrypted private key will re
 
 Some people are comfortable with that risk - their password is strong, maybe their drive is encrypted, they use 2FA on their OS, they lock their laptop in a safe when they are not using it. Other people would prefer that the private key file never touches their hard drive, and so create it on a secure USB drive which it never leaves (you can configure this - see the configuration section below). There are no doubt plenty of other methods. Again, education is key. 
 
-When you export your private key from MetaMask, you might be tempted to copy/paste it into the application. Are you absolutely sure you don't have a silent virus on your machine that reads the contents of your clipboard? Or there's the possibility of leaving it lying around in your clipboard, and then accidentally pasting it into a discord. Typing it in to the application, rather than copy/pasting, would be safer. Yes, it takes longer and is error prone, but you only have to do it once.
+When you export your private key from MetaMask, you might be tempted to copy/paste it into the application. Are you absolutely sure you don't have any malware on your machine that could read the contents of your clipboard? And there's the possibility of leaving the private key lying around in your clipboard, and then accidentally pasting it into a discord. Typing it in to the application, rather than copy/pasting, would be safer. Yes, it takes longer and is more error prone, but you only have to do it once.
 
 There is also a risk for source code contributors. If you were to inadvertently push your *unencrypted* private key file into GitHub - well, let's just say - [it would be bad](https://www.youtube.com/watch?v=jyaLZHiJJnE). There are bots out in the wild that react to GitHub commits in public repos, and scan for anything resembling a private key. Your wallet would be emptied before you could say "total protonic reversal", and who ya gonna call to dig you out of that mess? Don't be tempted to copy/paste your private key and save it unencrypted anywhere near the git folder structure.
 
@@ -104,7 +104,7 @@ Assuming your terminal is still in the DFKQuestRunner folder, run the app using:
 
 ```node src/runner/quest-runner```
 
-Enter your password, and if you are running it for the first time, export your private key from MetaMask, and paste it when prompted.
+Enter your password, and if you are running it for the first time, export your private key from MetaMask, and enter it into the app when prompted.
 
 The app will loop indefinitely, checking for quests to start or complete every interval defined by the `pollingInterval` config entry
 
