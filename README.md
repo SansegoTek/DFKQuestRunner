@@ -102,7 +102,7 @@ The first time you run the application, it will prompt you for a password, and a
 
 Assuming your terminal is still in the DFKQuestRunner folder, run the app using:
 
-```node src/runner/quest-runner```
+```npm start```
 
 Enter your password, and if you are running it for the first time, export your private key from MetaMask, and enter it into the app when prompted.
 

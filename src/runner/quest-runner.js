@@ -1,8 +1,11 @@
-const config = require('./../config.json')
+const fs = require('fs')
+const readline = require('readline');
+
 const ethers = require('ethers')
+
+const config = require('./../config.json')
 const abi = require('./abi.json')
 const rewardLookup = require('./rewards.json')
-const fs = require('fs')
 
 const provider = new ethers.providers.JsonRpcProvider(getRpc())
 const heroContract = new ethers.Contract(config.heroContract, abi, provider)
@@ -57,17 +60,17 @@ async function createWallet() {
 }
 
 async function promptForInput(prompt, promptFor) {
-    const readline = require('readline').createInterface({ input: process.stdin, output: process.stdout });
+    const read = readline.createInterface({ input: process.stdin, output: process.stdout });
 
     try {
         let input = await new Promise(resolve => {
-            readline.question(prompt, answer => resolve(answer))
+            read.question(prompt, answer => resolve(answer))
         })
         if (!input) throw new Error(`No ${promptFor} provided. Try running the application again, and provide a ${promptFor}.`)
         return input
     }
     finally {
-        readline.close()
+        read.close()
     }
 }
 
@@ -87,7 +90,7 @@ async function checkForQuests() {
 
         // Complete any quests that need to be completed
         for(const quest of doneQuests) { await completeQuest(quest.heroes[0]) }
-        
+
         // Start any quests needing to start
         for(const quest of questsToStart) { await startQuest(quest) }
 
@@ -95,7 +98,9 @@ async function checkForQuests() {
     }
     catch(err)
     {
-        console.error(err)
+        console.error(`An error occured. Will attempt to retry in ` +
+          `${config.pollingInterval/1000} seconds... Error:`, err);
+        setTimeout(() => checkForQuests(), config.pollingInterval);
     }
 }
 
@@ -109,62 +114,63 @@ async function evaluateQuests(activeQuests) {
         if (quest.professionHeroes.length > 0
             && !questingHeroes.includes(quest.professionHeroes[0]))
             {
-                var staminaGood = await evaluateQuestHeroesStamina(quest, config.professionMaxAttempts, true)
-                if (staminaGood)
-                {
-                    questsToStart.push( {
-                        name: quest.name,
-                        address: quest.contractAddress,
-                        professional: true,
-                        heroes: quest.professionHeroes,
-                        attempts: config.professionMaxAttempts
-                    })
-                }
+                var readyHeroes = await getHeroesWithGoodStamina(quest, config.professionMaxAttempts, true)
+                questsToStart.push( {
+                    name: quest.name,
+                    address: quest.contractAddress,
+                    professional: true,
+                    heroes: readyHeroes,
+                    attempts: config.professionMaxAttempts
+                })
             }
 
         if (quest.nonProfessionHeroes.length > 0
             && !questingHeroes.includes(quest.nonProfessionHeroes[0]))
             {
-                var staminaGood = await evaluateQuestHeroesStamina(quest, config.nonProfessionMaxAttempts, false)
-                if (staminaGood)
-                {
-                    questsToStart.push( {
-                        name: quest.name,
-                        address: quest.contractAddress,
-                        professional: false,
-                        heroes: quest.nonProfessionHeroes,
-                        attempts: config.nonProfessionMaxAttempts
-                    })
-                }
+                var readyHeroes = await getHeroesWithGoodStamina(quest, config.nonProfessionMaxAttempts, false)
+                questsToStart.push( {
+                    name: quest.name,
+                    address: quest.contractAddress,
+                    professional: false,
+                    heroes: readyHeroes,
+                    attempts: config.nonProfessionMaxAttempts
+                })
             }
     }
 
     return questsToStart
 }
 
-async function evaluateQuestHeroesStamina(quest, maxAttempts, professional) {
+async function getHeroesWithGoodStamina(quest, maxAttempts, professional) {
     let minStamina = professional ? 5 * maxAttempts : 7 * maxAttempts
     let heroes = professional ? quest.professionHeroes : quest.nonProfessionHeroes
-    let lowestStamina = 100
-    let lowestStaminaHero;
 
-    for (const h of heroes) {
-        var stamina = Number(await questContract.getCurrentStamina(h))
-        if (stamina < lowestStamina) {
-            lowestStaminaHero = h
-            lowestStamina = stamina
+    const promises = heroes.map((hero) => {
+        return questContract.getCurrentStamina(hero);
+    });
+
+    const results = await Promise.all(promises);
+
+    const heroesWithGoodStaminaRaw = results.map((value, index) => {
+        const stamina = Number(value);
+        if (stamina >= minStamina) {
+            return heroes[index];
         }
-    };
 
-    if (lowestStamina < 100 && lowestStamina >= minStamina) return true;
+        return null;
+    });
+
+    const heroesWithGoodStamina = heroesWithGoodStaminaRaw.filter((h) =>  !!h);
 
     // TODO: Contract error, fix
     //let hero = await questContract.getHero(lowestStaminaHero)
     //console.log(`${professional ? "Professional" : "Non-professional" } ${quest.name} quest due to start at ${displayTime(hero.state.staminaFullAt)}`)
 
-    console.log(`${professional ? "Professional" : "Non-professional" } ${quest.name} quest is not ready to start. Lowest stamina is ${lowestStamina}`)
+    if (!heroesWithGoodStamina.length) {
+        console.log(`${professional ? "Professional" : "Non-professional" } ${quest.name} quest is not ready to start.`);
+    }
 
-    return false;
+    return heroesWithGoodStamina;
 }
 
 async function startQuest(quest) {
