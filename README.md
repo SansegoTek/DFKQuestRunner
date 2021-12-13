@@ -83,6 +83,7 @@ wallet
 
 professionMaxAttempts - the number of attempts that your professional heroes (e.g. fishers on a fishing quest) should try
 nonProfessionMaxAttempts - the number of attempts that your non-professional heroes (e.g. miners on a foraging quest) should try
+maxQuestGroupSize - the maximum size a quest group should be. DFK doesn't support more than 6 heroes on a quest
 
 pollingInterval - how often, in milliseconds, the app checks for new work to do
 
