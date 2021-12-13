@@ -80,18 +80,17 @@ async function checkForQuests() {
     {
         console.log('\nChecking for quests...\n')
         let activeQuests = await questContract.getActiveQuests(config.wallet.address)
-        let doneQuests = activeQuests.filter(quest => quest.completeAtTime < Math.round(Date.now() / 1000))
-        let runningQuests = activeQuests.filter(quest => !doneQuests.includes(quest))
-
-        let questsToStart = await evaluateQuests(activeQuests);
 
         // Display the finish time for any quests in progress
+        let runningQuests = activeQuests.filter(quest => quest.completeAtTime >= Math.round(Date.now() / 1000))
         runningQuests.forEach(quest => console.log(`Quest led by hero ${quest.heroes[0]} is due to complete at ${displayTime(quest.completeAtTime)}`))
 
         // Complete any quests that need to be completed
+        let doneQuests = activeQuests.filter(quest => !runningQuests.includes(quest))
         for(const quest of doneQuests) { await completeQuest(quest.heroes[0]) }
 
         // Start any quests needing to start
+        let questsToStart = await getQuestsToStart(activeQuests);
         for(const quest of questsToStart) { await startQuest(quest) }
 
         setTimeout(() => checkForQuests(), config.pollingInterval);
@@ -106,46 +105,44 @@ async function checkForQuests() {
     }
 }
 
-async function evaluateQuests(activeQuests) {
+async function getQuestsToStart(activeQuests) {
     var questsToStart = new Array()
     var questingHeroes = new Array()
 
     activeQuests.forEach(q => q.heroes.forEach(h => questingHeroes.push(Number(h))))
 
     for (const quest of config.quests) {
-        if (quest.professionHeroes.length > 0
-            && !questingHeroes.includes(quest.professionHeroes[0]))
-            {
-                var readyHeroes = await getHeroesWithGoodStamina(quest, config.professionMaxAttempts, true)
-                questsToStart.push( {
-                    name: quest.name,
-                    address: quest.contractAddress,
-                    professional: true,
-                    heroes: readyHeroes,
-                    attempts: config.professionMaxAttempts
-                })
-            }
+        if (quest.professionHeroes.length > 0) {
+            var readyHeroes = await getHeroesWithGoodStamina(questingHeroes, quest, config.professionMaxAttempts, true)
+            questsToStart.push( {
+                name: quest.name,
+                address: quest.contractAddress,
+                professional: true,
+                heroes: readyHeroes,
+                attempts: config.professionMaxAttempts
+            })
+        }
 
-        if (quest.nonProfessionHeroes.length > 0
-            && !questingHeroes.includes(quest.nonProfessionHeroes[0]))
-            {
-                var readyHeroes = await getHeroesWithGoodStamina(quest, config.nonProfessionMaxAttempts, false)
-                questsToStart.push( {
-                    name: quest.name,
-                    address: quest.contractAddress,
-                    professional: false,
-                    heroes: readyHeroes,
-                    attempts: config.nonProfessionMaxAttempts
-                })
-            }
+        if (quest.nonProfessionHeroes.length > 0) {
+            var readyHeroes = await getHeroesWithGoodStamina(questingHeroes, quest, config.nonProfessionMaxAttempts, false)
+            questsToStart.push( {
+                name: quest.name,
+                address: quest.contractAddress,
+                professional: false,
+                heroes: readyHeroes,
+                attempts: config.nonProfessionMaxAttempts
+            })
+        }
     }
 
     return questsToStart
 }
 
-async function getHeroesWithGoodStamina(quest, maxAttempts, professional) {
+async function getHeroesWithGoodStamina(questingHeroes, quest, maxAttempts, professional) {
     let minStamina = professional ? 5 * maxAttempts : 7 * maxAttempts
+
     let heroes = professional ? quest.professionHeroes : quest.nonProfessionHeroes
+    heroes = heroes.filter(h => !questingHeroes.includes(h))
 
     const promises = heroes.map((hero) => {
         return questContract.getCurrentStamina(hero);
@@ -194,7 +191,7 @@ async function startQuest(quest) {
 
 async function startQuestBatch(quest, questingGroup) {
     try {
-        console.log(`Starting ${quest.professional ? "Professional" : "Non-professional" } ${quest.name} quest with heroes ${questingGroup}.`)
+        console.log(`Starting ${quest.professional ? "Professional" : "Non-professional" } ${quest.name} quest with hero(es) ${questingGroup}.`)
         await tryTransaction(() => questContract.connect(wallet).startQuest(questingGroup, quest.address, quest.attempts, callOptions), 2)
         console.log(`Started ${quest.professional ? "Professional" : "Non-professional" } ${quest.name} quest.`)
     }

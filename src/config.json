@@ -34,7 +34,7 @@
     "questContract": "0x5100Bd31b822371108A0f63DCFb6594b9919Eaf4",
     "heroContract": "0x5f753dcdf9b1ad9aabc1346614d1f4746fd6ce5c",
 
-    "useBackupRpc": true,
+    "useBackupRpc": false,
     "rpc" : {
         "harmonyRpc": "https://api.harmony.one",
         "poktRpc": "https://harmony-0-rpc.gateway.pokt.network"
