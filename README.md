@@ -1,6 +1,16 @@
-# --- Gardening Update ---
+# --- Harmony Gas Price increase ---
 
-We have not updated for the gardening quests yet, due to the complexity of the rules. However, the current version will _complete_ gardening quests for you - you will need to start the quests manually (i.e. choose hero and which LP to garden in), and DFKQuestRuner will automatically complete the quests when your hero's stamina hits 0.
+Harmony have recently increased their minimum gas price to 30 Gwei, which is causing DFKQuestRunner to fail. This has been updated in the config.json file, but if you dont want to pull down the new code, you can just update the line in your config.json that reads:
+
+`"gasPrice": 10000000000,`
+
+to read
+
+`"gasPrice": 30000000000,`
+
+# --- Gardening and Mining Update ---
+
+We have not updated for the gardening/mining quests yet, due to the additional complexity of the rules. However, the current version will _complete_ gardening/mining quests for you - you will need to start the quests manually, and DFKQuestRuner will automatically complete the quests when your hero's stamina hits 0.
 
 # DFKQuestRunner
 

@@ -13,20 +13,20 @@
     "quests": [
         {
             "name": "Fishing",
-            "professionHeroes": [ 34567 ],
-            "nonProfessionHeroes": [ 12345, 23456 ],
+            "professionHeroes": [34567],
+            "nonProfessionHeroes": [12345, 23456],
             "contractAddress": "0xE259e8386d38467f0E7fFEdB69c3c9C935dfaeFc"
         },
         {
             "name": "Foraging",
-            "professionHeroes": [ 45678, 56789 ],
-            "nonProfessionHeroes": [ 67890 ],
+            "professionHeroes": [45678, 56789],
+            "nonProfessionHeroes": [67890],
             "contractAddress": "0x3132c76acF2217646fB8391918D28a16bD8A8Ef4"
         },
         {
             "name": "WishingWell",
-            "professionHeroes": [ ],
-            "nonProfessionHeroes": [ ],
+            "professionHeroes": [],
+            "nonProfessionHeroes": [],
             "contractAddress": "0x0548214A0760a897aF53656F4b69DbAD688D8f29"
         }
     ],
@@ -35,11 +35,11 @@
     "heroContract": "0x5f753dcdf9b1ad9aabc1346614d1f4746fd6ce5c",
 
     "useBackupRpc": false,
-    "rpc" : {
+    "rpc": {
         "harmonyRpc": "https://api.harmony.one",
         "poktRpc": "https://harmony-0-rpc.gateway.pokt.network"
     },
 
-    "gasPrice": 10000000000,
-    "gasLimit" : 5000000
+    "gasPrice": 30000000000,
+    "gasLimit": 5000000
 }
