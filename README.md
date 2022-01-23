@@ -89,15 +89,14 @@ If you're wanting to get your hands dirty with the source code and maybe contrib
 
 # Configuration
 
-Configuration is handled in `config.json`. The key configuration settings to be aware of are:
+Part of the configuration is in the `.env` file (to be created):
+
+-   WALLET_ADDRESS - your 0x wallet address used with Defi Kingdoms
+-   ENCRYPTED_WALLET_PATH - the file path to your encrypted primary key file. This defaults to a file called "w.json" in the root of the source code, but can be changed to e.g. point to a location on a secure USB drive
+
+The rest of the configuration lives in `config.json`. The key configuration settings to be aware of are:
 
 ```
-wallet
- - address - your 0x wallet address used with Defi Kingdoms
- - encryptedWalletPath - the file path to your encrypted primary key file. This defaults to a file called "w.json" in the root of the source code, but can be changed to e.g. point to a location on a secure USB drive
-
-professionMaxAttempts - the number of attempts that your professional heroes (e.g. fishers on a fishing quest) should try
-nonProfessionMaxAttempts - the number of attempts that your non-professional heroes (e.g. miners on a foraging quest) should try
 maxQuestGroupSize - the maximum size a quest group should be. DFK doesn't support more than 6 heroes on a quest
 
 pollingInterval - how often, in milliseconds, the app checks for new work to do
@@ -106,9 +105,15 @@ quests
  - <quest>
    - professionHeroes - Comma-separated list of the Ids of the professional heros that you are sending on this quest. Make sure the heroes profession matches the quests profession
    - nonProfessionHeroes - Comma-separated list of the Ids of the non-professional heroes that you are sending on this quest. Make sure the heroes profession doesn't match the quests profession
+   - professionMaxAttempts - the number of attempts that your professional heroes (e.g. fishers on a fishing quest) should try
+   - nonProfessionMaxAttempts - the number of attempts that your non-professional heroes (e.g. miners on a foraging quest) should try
 
 useBackupRpc - false to use the Harmony RPC, true to use the POKT RPC when Harmony RPC has issues
 ```
+
+Note 1: In the Jewel mining quest, for every 15 stamina that your lead miner spends mining it will result in a 10% chance to hit a JEWEL jackpot (unlocking 10 jewel extra). This is why the `professionStaminaPerAttempt` and `nonProfessionStaminaPerAttempt` is set to `15` for the Jewel mining quest, even though the 'real' numbers are `10` and `12`.
+
+Note 2: The `professionMaxAttempts` and `nonProfessionStaminaPerAttempt` for mining quests should always be set to `1` because for higher attempts the smart contract will result in a negative stamina for the questing heroes.
 
 # Running
 

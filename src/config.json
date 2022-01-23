@@ -1,33 +1,48 @@
 {
-    "wallet": {
-        "address": "<your 0x Wallet Address>",
-        "encryptedWalletPath": "./w.json"
-    },
-
-    "professionMaxAttempts": 5,
-    "nonProfessionMaxAttempts": 3,
-    "maxQuestGroupSize": 6,
+    "maxQuestGroupSize": 3,
 
     "pollingInterval": "60000",
 
     "quests": [
         {
             "name": "Fishing",
-            "professionHeroes": [34567],
-            "nonProfessionHeroes": [12345, 23456],
+            "professionHeroes": [],
+            "nonProfessionHeroes": [],
+            "professionMaxAttempts": 5,
+            "nonProfessionMaxAttempts": 3,
+            "professionStaminaPerAttempt": 5,
+            "nonProfessionStaminaPerAttempt": 7,
             "contractAddress": "0xE259e8386d38467f0E7fFEdB69c3c9C935dfaeFc"
         },
         {
             "name": "Foraging",
-            "professionHeroes": [45678, 56789],
-            "nonProfessionHeroes": [67890],
+            "professionHeroes": [],
+            "nonProfessionHeroes": [],
+            "professionMaxAttempts": 1,
+            "nonProfessionMaxAttempts": 3,
+            "professionStaminaPerAttempt": 5,
+            "nonProfessionStaminaPerAttempt": 7,
             "contractAddress": "0x3132c76acF2217646fB8391918D28a16bD8A8Ef4"
         },
         {
-            "name": "WishingWell",
+            "name": "JewelMining",
+            "professionHeroes": [89986],
+            "nonProfessionHeroes": [],
+            "professionMaxAttempts": 1,
+            "nonProfessionMaxAttempts": 1,
+            "professionStaminaPerAttempt": 15,
+            "nonProfessionStaminaPerAttempt": 15,
+            "contractAddress": "0x6FF019415Ee105aCF2Ac52483A33F5B43eaDB8d0"
+        },
+        {
+            "name": "GoldMining",
             "professionHeroes": [],
             "nonProfessionHeroes": [],
-            "contractAddress": "0x0548214A0760a897aF53656F4b69DbAD688D8f29"
+            "professionMaxAttempts": 1,
+            "nonProfessionMaxAttempts": 1,
+            "professionStaminaPerAttempt": 15,
+            "nonProfessionStaminaPerAttempt": 15,
+            "contractAddress": "0x569E6a4c2e3aF31B337Be00657B4C040C828Dd73"
         }
     ],
 

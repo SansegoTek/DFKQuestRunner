@@ -7,6 +7,8 @@ const config = require("./../config.json");
 const abi = require("./abi.json");
 const rewardLookup = require("./rewards.json");
 
+require('dotenv').config()
+
 const callOptions = { gasPrice: config.gasPrice, gasLimit: config.gasLimit };
 
 let provider, questContract, wallet;
@@ -20,7 +22,7 @@ async function main() {
             provider
         );
 
-        wallet = fs.existsSync(config.wallet.encryptedWalletPath)
+        wallet = fs.existsSync(process.env.ENCRYPTED_WALLET_PATH)
             ? await getEncryptedWallet()
             : await createWallet();
 
@@ -38,7 +40,7 @@ async function getEncryptedWallet() {
 
     try {
         let encryptedWallet = fs.readFileSync(
-            config.wallet.encryptedWalletPath,
+            process.env.ENCRYPTED_WALLET_PATH,
             "utf8"
         );
         let decryptedWallet = ethers.Wallet.fromEncryptedJsonSync(
@@ -67,7 +69,7 @@ async function createWallet() {
     try {
         let newWallet = new ethers.Wallet(pk, provider);
         let enc = await newWallet.encrypt(pw);
-        fs.writeFileSync(config.wallet.encryptedWalletPath, enc);
+        fs.writeFileSync(process.env.ENCRYPTED_WALLET_PATH, enc);
         return newWallet;
     } catch (err) {
         throw new Error(
@@ -100,7 +102,7 @@ async function checkForQuests() {
     try {
         console.log("\nChecking for quests...\n");
         let activeQuests = await questContract.getActiveQuests(
-            config.wallet.address
+            process.env.WALLET_ADDRESS
         );
 
         // Display the finish time for any quests in progress
@@ -155,7 +157,6 @@ async function getQuestsToStart(activeQuests) {
             var readyHeroes = await getHeroesWithGoodStamina(
                 questingHeroes,
                 quest,
-                config.professionMaxAttempts,
                 true
             );
             questsToStart.push({
@@ -163,7 +164,7 @@ async function getQuestsToStart(activeQuests) {
                 address: quest.contractAddress,
                 professional: true,
                 heroes: readyHeroes,
-                attempts: config.professionMaxAttempts,
+                attempts: quest.professionMaxAttempts,
             });
         }
 
@@ -171,7 +172,6 @@ async function getQuestsToStart(activeQuests) {
             var readyHeroes = await getHeroesWithGoodStamina(
                 questingHeroes,
                 quest,
-                config.nonProfessionMaxAttempts,
                 false
             );
             questsToStart.push({
@@ -179,7 +179,7 @@ async function getQuestsToStart(activeQuests) {
                 address: quest.contractAddress,
                 professional: false,
                 heroes: readyHeroes,
-                attempts: config.nonProfessionMaxAttempts,
+                attempts: quest.nonProfessionMaxAttempts,
             });
         }
     }
@@ -190,10 +190,11 @@ async function getQuestsToStart(activeQuests) {
 async function getHeroesWithGoodStamina(
     questingHeroes,
     quest,
-    maxAttempts,
     professional
 ) {
-    let minStamina = professional ? 5 * maxAttempts : 7 * maxAttempts;
+    let minStamina = professional
+        ? quest.professionMaxAttempts * quest.nonProfessionStaminaPerAttempt
+        : quest.nonProfessionMaxAttempts * quest.professionStaminaPerAttempt;
 
     let heroes = professional
         ? quest.professionHeroes
