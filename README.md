@@ -1,16 +1,10 @@
-# --- Harmony Gas Price increase ---
+# --- DFK Bot Policy ---
 
-Harmony have recently increased their minimum gas price to 30 Gwei, which is causing DFKQuestRunner to fail. This has been updated in the config.json file, but if you dont want to pull down the new code, you can just update the line in your config.json that reads:
+The DFK team have recently taken a stance that bots like this one run the risk of damaging the game, by undermining the upcoming scholarship program. Accordingly, this project will no longer be maintained, and no PRs will be accepted. It is very likely that upcoming contract changes may render this bot inoperable, so usage is unadvisable.
 
-`"gasPrice": 10000000000,`
+The team are likely to introduce a policy that aims to curb the use of bots by applying a penalty to heroes or wallets that use them. Please bear that in mind if you are planning to use a bot in the game.
 
-to read
-
-`"gasPrice": 30000000000,`
-
-# --- Gardening and Mining Update ---
-
-We have not updated for the gardening/mining quests yet, due to the additional complexity of the rules. However, the current version will _complete_ gardening/mining quests for you - you will need to start the quests manually, and DFKQuestRuner will automatically complete the quests when your hero's stamina hits 0.
+If you are still determined to use a bot, please make yourself aware of the risks by reading through the Private Key section below.
 
 # DFKQuestRunner
 
